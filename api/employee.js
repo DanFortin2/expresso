@@ -99,6 +99,22 @@ employeeRouter.put('/:employeeId', validateEmployee, (req, res, next) => {
 });
 
 //Delete employee (not actually delete but set their is employed column to false in DB)
-
+employeeRouter.delete('/:employeeId', (req, res, next) => {
+  const employeeId = req.params.employeeId;
+  db.run(`UPDATE Employee SET is_current_employee = 0 WHERE id = $employeeId`,
+    {
+      $employeeId : employeeId
+    }, function(err) {
+      if (err) {
+        next(err);
+      }
+      db.get(`SELECT * FROM Employee WHERE id = ${employeeId}`, (err, employee) => {
+        if (!employee) {
+          res.status(500).send();
+        }
+        res.status(200).send( {employee : employee} );
+      });
+    });
+});
 
 module.exports = employeeRouter;
