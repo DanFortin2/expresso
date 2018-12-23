@@ -4,6 +4,8 @@ const sqlite3 = require('sqlite3');
 const timesheetRouter = require('./timesheet.js');
 const db = new sqlite3.Database(process.env.TEST_DATABASE || './database.sqlite')
 
+employeeRouter.use('/:employeeId/timesheets', timesheetRouter);
+
 
 //middleware to grab the proper employee based off the ID
 employeeRouter.param('employeeId', (req, res, next, employeeId) => {
