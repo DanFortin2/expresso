@@ -1,9 +1,9 @@
 const express = require('express');
 const apiRouter = express.Router();
-//const artRouter = require('./artists.js');
-//const seriesRouter = require('./series.js');
+const employeeRouter = require('./employee.js');
+const menuRouter = require('./menu.js');
 
-//apiRouter.use('/artists', artRouter);
-//apiRouter.use('/series', seriesRouter);
+apiRouter.use('/employees', employeeRouter);
+apiRouter.use('/menus', menuRouter);
 
 module.exports = apiRouter;
