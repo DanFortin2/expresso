@@ -41,4 +41,43 @@ employeeRouter.get('/:employeeId', (req, res, next) => {
 });
 
 
+//Helper function to validate the values in the req
+const validateEmployee = (req, res, next) => {
+  const newEmployee = req.body.employee;
+  if (!newEmployee.name || !newEmployee.position || !newEmployee.wage ) {
+    return res.status(400).send();
+  }
+  next();
+}
+
+
+//create new employee
+
+employeeRouter.post('/', validateEmployee, (req, res, next) => {
+  const newEmployee = req.body.employee;
+  db.run(`INSERT INTO Employee (name, position, wage) values ($name, $position, $wage)`,
+  {
+    $name : newEmployee.name,
+    $position : newEmployee.position,
+    $wage : newEmployee.wage
+  },
+  function(err) {
+    if(err) {
+      return res.status(500).send();
+    }
+    db.get(`SELECT * FROM Employee WHERE id = ${this.lastID}`, (err, employee) => {
+      if (!employee) {
+        res.status(500).send();
+      }
+      res.status(201).send( {employee : employee} );
+    });
+  });
+});
+
+
+//{ employee: { name: 'New Employee', position: 'Position', wage: 30 } }
+
+
+
+
 module.exports = employeeRouter;
