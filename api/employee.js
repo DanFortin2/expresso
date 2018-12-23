@@ -51,8 +51,7 @@ const validateEmployee = (req, res, next) => {
 }
 
 
-//create new employee
-
+//create new employee and return that employee
 employeeRouter.post('/', validateEmployee, (req, res, next) => {
   const newEmployee = req.body.employee;
   db.run(`INSERT INTO Employee (name, position, wage) values ($name, $position, $wage)`,
@@ -74,10 +73,32 @@ employeeRouter.post('/', validateEmployee, (req, res, next) => {
   });
 });
 
+//update existing employee and return it
+employeeRouter.put('/:employeeId', validateEmployee, (req, res, next) => {
+  const newEmployee = req.body.employee;
+  const employeeId = req.params.employeeId;
+  db.run(`UPDATE Employee SET name = $name, position = $position, wage = $wage
+    WHERE id = $employeeId`,
+  {
+    $employeeId : employeeId,
+    $name : newEmployee.name,
+    $position : newEmployee.position,
+    $wage : newEmployee.wage
+  },
+  function(err) {
+    if(err) {
+      return res.status(500).send();
+    }
+    db.get(`SELECT * FROM Employee WHERE id = ${employeeId}`, (err, employee) => {
+      if (!employee) {
+        res.status(500).send();
+      }
+      res.status(200).send( {employee : employee} );
+    });
+  });
+});
 
-//{ employee: { name: 'New Employee', position: 'Position', wage: 30 } }
-
-
+//Delete employee (not actually delete but set their is employed column to false in DB)
 
 
 module.exports = employeeRouter;
