@@ -94,7 +94,7 @@ menuRouter.put('/:menuId', validateMenu, (req, res, next) => {
 });
 
 
-//Delete menu
+//Delete menu, but don't delete if menu items exist still
 menuRouter.delete('/:menuId', (req, res, next) => {
   const menuId = req.params.menuId;
   db.get(`SELECT * FROM MenuItem WHERE menu_id = $menuId`,
