@@ -76,12 +76,10 @@ timesheetRouter.post('/', validateTimesheet, (req, res, next) => {
 //update an existing timesheet
 timesheetRouter.put('/:timesheetId', validateTimesheet, (req, res, next) => {
   const updateTimesheet = req.body.timesheet;
-  const employeeId = req.params.employeeId;
   const timesheetId = req.params.timesheetId;
   db.run(`UPDATE Timesheet SET hours = $hours, rate = $rate, date = $date
-    WHERE employee_id = $employeeId AND id = $timesheetId `,
+    WHERE id = $timesheetId `,
     {
-      $employeeId : employeeId,
       $timesheetId : timesheetId,
       $hours : updateTimesheet.hours,
       $rate : updateTimesheet.rate,
@@ -101,9 +99,21 @@ timesheetRouter.put('/:timesheetId', validateTimesheet, (req, res, next) => {
 });
 
 
-
 //delete a timesheet
-
+timesheetRouter.delete('/:timesheetId', (req, res, next) => {
+  const timesheetId = req.params.timesheetId;
+  db.run(`DELETE FROM Timesheet WHERE id = $timesheetId`,
+    {
+      $timesheetId : timesheetId
+    },
+    function (err) {
+      if (err) {
+        next(err)
+      } else {
+        res.status(204).send();
+      }
+    });
+});
 
 
 
