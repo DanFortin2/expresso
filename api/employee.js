@@ -64,7 +64,7 @@ employeeRouter.post('/', validateEmployee, (req, res, next) => {
   },
   function(err) {
     if(err) {
-      return res.status(500).send();
+      next(err);
     }
     db.get(`SELECT * FROM Employee WHERE id = ${this.lastID}`, (err, employee) => {
       if (!employee) {
@@ -89,7 +89,7 @@ employeeRouter.put('/:employeeId', validateEmployee, (req, res, next) => {
   },
   function(err) {
     if(err) {
-      return res.status(500).send();
+      next(err);
     }
     db.get(`SELECT * FROM Employee WHERE id = ${employeeId}`, (err, employee) => {
       if (!employee) {
