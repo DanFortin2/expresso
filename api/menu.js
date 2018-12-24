@@ -1,11 +1,11 @@
 const express = require('express');
 const menuRouter = express.Router();
 const sqlite3 = require('sqlite3');
-const menuitemRouter = require('./menuitem.js');
+const menuItemRouter = require('./menuitem.js');
 const db = new sqlite3.Database(process.env.TEST_DATABASE || './database.sqlite')
 
 //port over menu item router
-menuRouter.use('/:menuId/menu-items', menuitemRouter);
+menuRouter.use('/:menuId/menu-items', menuItemRouter);
 
 //middleware to grab the proper employee based off the ID
 menuRouter.param('menuId', (req, res, next, menuId) => {
