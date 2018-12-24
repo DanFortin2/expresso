@@ -3,7 +3,7 @@ const menuItemRouter = express.Router( {mergeParams: true} );
 const sqlite3 = require('sqlite3');
 const db = new sqlite3.Database(process.env.TEST_DATABASE || './database.sqlite')
 
-//created middleware function to grab timesheet based off ID to use in other functions
+//created middleware function to grab menu items based off ID to use in other functions
 menuItemRouter.param('menuItemId', (req, res, next, menuItemId) => {
   db.get(`SELECT * FROM MenuItem WHERE id = $menuItemId`,
   {
@@ -20,7 +20,7 @@ menuItemRouter.param('menuItemId', (req, res, next, menuItemId) => {
   });
 });
 
-//grab all timesheets based off an employee ID
+//grab all timesheets based off an Menu ID
 menuItemRouter.get('/', (req, res, next) => {
   const menuId = req.params.menuId;
   db.all(`SELECT * FROM MenuItem WHERE menu_id = $menuId`,
@@ -35,6 +35,8 @@ menuItemRouter.get('/', (req, res, next) => {
     }
   });
 });
+
+
 
 
 module.exports = menuItemRouter;

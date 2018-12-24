@@ -7,7 +7,7 @@ const db = new sqlite3.Database(process.env.TEST_DATABASE || './database.sqlite'
 //port over menu item router
 menuRouter.use('/:menuId/menu-items', menuItemRouter);
 
-//middleware to grab the proper employee based off the ID
+//middleware to grab the proper menu based off the ID
 menuRouter.param('menuId', (req, res, next, menuId) => {
   db.get(`SELECT * FROM Menu WHERE id = $menuId`,
   {
@@ -25,7 +25,7 @@ menuRouter.param('menuId', (req, res, next, menuId) => {
 });
 
 
-//grab all employess that are currently employed
+//grab all menus
 menuRouter.get('/', (req, res, next) => {
   db.all(`SELECT * FROM Menu`, (err, menus) => {
     if (err) {
@@ -51,7 +51,7 @@ const validateMenu = (req, res, next) => {
   next();
 }
 
-//create new employee and return that employee
+//create new menu and return that menu
 menuRouter.post('/', validateMenu, (req, res, next) => {
   const newMenu = req.body.menu;
   db.run(`INSERT INTO Menu (title) values ($title)`,
