@@ -75,14 +75,48 @@ menuItemRouter.post('/', validateMenuItems, (req, res, next) => {
 });
 
 
+//update menu items by ID
+menuItemRouter.put('/:menuItemId', validateMenuItems, (req, res, next) => {
+  const updateMenuItems = req.body.menuItem;
+  const menuItemId = req.params.menuItemId;
+  db.run(`UPDATE MenuItem SET name = $name, description = $description,
+    inventory = $inventory, price = $price WHERE id = $menItemId`,
+  {
+    $menItemId : menuItemId,
+    $name : updateMenuItems.name,
+    $description : updateMenuItems.description,
+    $inventory : updateMenuItems.inventory,
+    $price : updateMenuItems.price
+  },
+  function(err) {
+    if(err) {
+      next(err);
+    }
+    db.get(`SELECT * FROM MenuItem WHERE id = ${menuItemId}`, (err, menuItem) => {
+      if (!menuItem) {
+        res.status(500).send();
+      }
+      res.status(200).json( {menuItem : menuItem} );
+    });
+  });
+});
 
-//{ menuItem:
-  // { name: 'New Menu Item',
-    // description: 'New Description',
-    // inventory: 20,
-    // price: 1.5 } }
 
-
+//Delete item by Id
+menuItemRouter.delete('/:menuItemId', (req, res, next) => {
+  const menuItemId = req.params.menuItemId;
+  db.run(`DELETE FROM MenuItem WHERE id = $menuItemId`,
+  {
+    $menuItemId : menuItemId
+  },
+  function(err) {
+    if(err) {
+      next(err);
+    } else {
+      res.status(204).send();
+    }
+  });
+});
 
 
 module.exports = menuItemRouter;
