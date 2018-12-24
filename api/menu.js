@@ -98,23 +98,23 @@ menuRouter.put('/:menuId', validateMenu, (req, res, next) => {
 menuRouter.delete('/:menuId', (req, res, next) => {
   const menuId = req.params.menuId;
   db.get(`SELECT * FROM MenuItem WHERE menu_id = $menuId`,
-    {
-      $menuId : menuId
-    },
-    (err, menuItem) => {
-      if (err) {
-        next(err);
-      } else if (menuItem) {
-        res.status(400).send();
-      } else {
-        db.run(`DELETE FROM Menu WHERE id = ${menuId}`, (err) => {
-          if (err) {
-            res.status(500).send();
-          }
-          res.status(204).send();
-        });
-      }
-    });
+  {
+    $menuId : menuId
+  },
+  (err, menuItem) => {
+    if (err) {
+      next(err);
+    } else if (menuItem) {
+      res.status(400).send();
+    } else {
+      db.run(`DELETE FROM Menu WHERE id = ${menuId}`, (err) => {
+        if (err) {
+          res.status(500).send();
+        }
+        res.status(204).send();
+      });
+    }
+  });
 });
 
 
