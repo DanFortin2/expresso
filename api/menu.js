@@ -4,6 +4,8 @@ const sqlite3 = require('sqlite3');
 const menuitemRouter = require('./menuitem.js');
 const db = new sqlite3.Database(process.env.TEST_DATABASE || './database.sqlite')
 
+//port over menu item router
+menuRouter.use('/:menuId/menu-items', menuitemRouter);
 
 //middleware to grab the proper employee based off the ID
 menuRouter.param('menuId', (req, res, next, menuId) => {
@@ -68,6 +70,29 @@ menuRouter.post('/', validateMenu, (req, res, next) => {
     });
   });
 });
+
+//update existing menu and return it
+menuRouter.put('/:menuId', validateMenu, (req, res, next) => {
+  const newMenu = req.body.menu;
+  const menuId = req.params.menuId;
+  db.run(`UPDATE Menu SET title = $title WHERE id = $menuId`,
+  {
+    $menuId : menuId,
+    $title : newMenu.title
+  },
+  function(err) {
+    if(err) {
+      next(err);
+    }
+    db.get(`SELECT * FROM Menu WHERE id = ${menuId}`, (err, menu) => {
+      if (!menu) {
+        res.status(500).send();
+      }
+      res.status(200).json( {menu : menu} );
+    });
+  });
+});
+
 
 
 module.exports = menuRouter;
