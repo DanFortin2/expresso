@@ -67,7 +67,7 @@ timesheetRouter.post('/', validateTimesheet, (req, res, next) => {
       if (!timesheet) {
         res.status(500).send()
       }
-      res.status(201).send( {timesheet : timesheet} );
+      res.status(201).json( {timesheet : timesheet} );
     });
   });
 });
@@ -93,7 +93,7 @@ timesheetRouter.put('/:timesheetId', validateTimesheet, (req, res, next) => {
         if (!timesheet) {
           res.status(500).send();
         }
-        res.status(200).send( {timesheet : timesheet} );
+        res.status(200).json( {timesheet : timesheet} );
       });
     });
 });

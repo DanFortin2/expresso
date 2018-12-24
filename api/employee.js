@@ -70,7 +70,7 @@ employeeRouter.post('/', validateEmployee, (req, res, next) => {
       if (!employee) {
         res.status(500).send();
       }
-      res.status(201).send( {employee : employee} );
+      res.status(201).json( {employee : employee} );
     });
   });
 });
@@ -95,7 +95,7 @@ employeeRouter.put('/:employeeId', validateEmployee, (req, res, next) => {
       if (!employee) {
         res.status(500).send();
       }
-      res.status(200).send( {employee : employee} );
+      res.status(200).json( {employee : employee} );
     });
   });
 });
@@ -114,7 +114,7 @@ employeeRouter.delete('/:employeeId', (req, res, next) => {
         if (!employee) {
           res.status(500).send();
         }
-        res.status(200).send( {employee : employee} );
+        res.status(200).json( {employee : employee} );
       });
     });
 });

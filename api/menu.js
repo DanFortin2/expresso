@@ -34,6 +34,12 @@ menuRouter.get('/', (req, res, next) => {
   });
 });
 
+//Grab a specific Menu by ID
+menuRouter.get('/:menuId', (req, res, next) => {
+  res.status(200).json( { menu : req.menu } );
+});
+
+
 //Helper function to validate the values in the req
 const validateMenu = (req, res, next) => {
   const newMenu = req.body.menu;
@@ -42,7 +48,6 @@ const validateMenu = (req, res, next) => {
   }
   next();
 }
-
 
 //create new employee and return that employee
 menuRouter.post('/', validateMenu, (req, res, next) => {
@@ -59,7 +64,7 @@ menuRouter.post('/', validateMenu, (req, res, next) => {
       if (!menu) {
         res.status(500).send();
       }
-      res.status(201).send( {menu : menu} );
+      res.status(201).json( {menu : menu} );
     });
   });
 });
